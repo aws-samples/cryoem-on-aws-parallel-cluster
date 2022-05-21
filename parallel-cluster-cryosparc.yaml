@@ -1,0 +1,176 @@
+Region: <REGION>
+Image:
+  Os: alinux2
+HeadNode:
+  InstanceType: c5.4xlarge
+  Networking:
+    SubnetId: <SMALL-PUBLIC-SUBNET-ID>
+    ElasticIp: true
+  Ssh:
+    KeyName: <EC2-KEY-PAIR-NAME>
+  LocalStorage:
+    RootVolume:
+      Size: 100
+    EphemeralVolume:
+      MountDir: /scratch
+  Dcv:
+    Enabled: true
+  CustomActions:
+    OnNodeConfigured:
+      Script: s3://<BUCKET-NAME>/parallel-cluster-post-install.sh
+      Args:
+        - s3://<BUCKET-NAME>/parallel-cluster-post-install.sh
+        - <CRYOSPARC-LICENSE>
+  Iam:
+    S3Access:
+      - BucketName: <S3-BUCKET-NAME>
+Scheduling:
+  Scheduler: slurm
+  SlurmQueues:
+    - Name: gpu-t4
+      CapacityType: ONDEMAND
+      ComputeResources:
+        - Name: g4dn-12xlarge
+          InstanceType: g4dn.12xlarge
+          MinCount: 0
+          MaxCount: 20
+          DisableSimultaneousMultithreading: true
+          Efa:
+            Enabled: false
+        - Name: g4dn-metal
+          InstanceType: g4dn.metal
+          MinCount: 0
+          MaxCount: 20
+          DisableSimultaneousMultithreading: true
+          Efa:
+            Enabled: false
+        - Name: g4dn-16xlarge
+          InstanceType: g4dn.16xlarge
+          MinCount: 0
+          MaxCount: 20
+          DisableSimultaneousMultithreading: true
+          Efa:
+            Enabled: false
+      Networking:
+        SubnetIds:
+          - <LARGE-PRIVATE-SUBNET-ID>
+        PlacementGroup:
+          Enabled: true
+      ComputeSettings:
+        LocalStorage:
+          EphemeralVolume:
+            MountDir: /scratch
+    - Name: gpu-a100
+      CapacityType: ONDEMAND
+      ComputeResources:
+        - Name: p4d-24xlarge
+          InstanceType: p4d.24xlarge
+          MinCount: 0
+          MaxCount: 20
+          DisableSimultaneousMultithreading: true
+          Efa:
+            Enabled: false
+      Networking:
+        SubnetIds:
+          - <LARGE-PRIVATE-SUBNET-ID>
+        PlacementGroup:
+          Enabled: true
+      ComputeSettings:
+        LocalStorage:
+          EphemeralVolume:
+            MountDir: /scratch
+    - Name: gpu-v100
+      CapacityType: ONDEMAND
+      ComputeResources:
+        - Name: p3-2xlarge
+          InstanceType: p3.2xlarge
+          MinCount: 0
+          MaxCount: 20
+          DisableSimultaneousMultithreading: true
+          Efa:
+            Enabled: false
+        - Name: p3-8xlarge
+          InstanceType: p3.8xlarge
+          MinCount: 0
+          MaxCount: 20
+          DisableSimultaneousMultithreading: true
+          Efa:
+            Enabled: false
+        - Name: p3-16xlarge
+          InstanceType: p3.16xlarge
+          MinCount: 0
+          MaxCount: 20
+          DisableSimultaneousMultithreading: true
+          Efa:
+            Enabled: false
+      Networking:
+        SubnetIds:
+          - <LARGE-PRIVATE-SUBNET-ID>
+        PlacementGroup:
+          Enabled: true
+      ComputeSettings:
+        LocalStorage:
+          EphemeralVolume:
+            MountDir: /scratch
+    - Name: cpu
+      CapacityType: ONDEMAND
+      ComputeResources:
+        - Name: c5n-18xlarge
+          InstanceType: c5n.18xlarge
+          MinCount: 0
+          MaxCount: 20
+          DisableSimultaneousMultithreading: true
+          Efa:
+            Enabled: true
+      Networking:
+        SubnetIds:
+          - <LARGE-PRIVATE-SUBNET-ID>
+        PlacementGroup:
+          Enabled: true
+      ComputeSettings:
+        LocalStorage:
+          EphemeralVolume:
+            MountDir: /scratch
+    - Name: gpu-a100-spot
+      CapacityType: SPOT
+      ComputeResources:
+        - Name: p4d-24xlarge-spot
+          InstanceType: p4d.24xlarge
+          MinCount: 0
+          MaxCount: 20
+          DisableSimultaneousMultithreading: true
+          Efa:
+            Enabled: false
+      Networking:
+        SubnetIds:
+          - <LARGE-PRIVATE-SUBNET-ID>
+        PlacementGroup:
+          Enabled: true
+      ComputeSettings:
+        LocalStorage:
+          EphemeralVolume:
+            MountDir: /scratch
+AdditionalPackages:
+  IntelSoftware:
+    IntelHpcPlatform: false
+SharedStorage:
+  - Name: cryosparc-ebs
+    StorageType: Ebs
+    MountDir: /shared
+    EbsSettings:
+      Encrypted: false
+      VolumeType: gp3
+      Size: 100
+  - Name: cryosparc-fsx
+    StorageType: FsxLustre
+    MountDir: /fsx
+    FsxLustreSettings:
+      AutoImportPolicy: NEW_CHANGED
+      StorageCapacity: 12000
+      DeploymentType: SCRATCH_2
+      ImportedFileChunkSize: 1024
+      ImportPath: s3://<PATH-TO-IMPORT-FILES>
+Monitoring:
+  Dashboards:
+    CloudWatch:
+      Enabled: true
