@@ -13,7 +13,7 @@ There are several prerequisites to fulfill before deploying this solution. You'l
 
 ## Prerequisite: CryoSPARC license from Structura
 
-First, you’ll need to [request a license from Structura|https://cryosparc.com/download]. It can take a day or two to obtain the license, so request it before you get started. 
+First, you’ll need to ![request a license from Structura](https://cryosparc.com/download). It can take a day or two to obtain the license, so request it before you get started. 
 
 Paste the license id as an input to the ParallelCluster configuration file.
 
