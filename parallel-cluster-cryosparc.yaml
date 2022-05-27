@@ -2,7 +2,7 @@ Region: <REGION>
 Image:
   Os: alinux2
 HeadNode:
-  InstanceType: c5.4xlarge
+  InstanceType: c5a.4xlarge
   Networking:
     SubnetId: <SMALL-PUBLIC-SUBNET-ID>
     ElasticIp: true
@@ -150,9 +150,6 @@ Scheduling:
         LocalStorage:
           EphemeralVolume:
             MountDir: /scratch
-AdditionalPackages:
-  IntelSoftware:
-    IntelHpcPlatform: false
 SharedStorage:
   - Name: cryosparc-ebs
     StorageType: Ebs

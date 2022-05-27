@@ -1,0 +1,22 @@
+Resources:
+  DataRepoTaskIamPolicy:
+    Type: "AWS::IAM::ManagedPolicy"
+    Properties:
+      ManagedPolicyName: !Sub ${ProjectName}-FSxLustreDataRepoTasksPolicy
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: "DataRepoTaskAdmin"
+            Effect: Allow
+            Action:
+              - "fsx:CreateDataRepositoryTask"
+              - "fsx:CancelDataRepositoryTask"
+            Resource:
+              - !Sub "arn:aws:fsx:${AWS::Region}:${AWS::AccountId}:file-system/${FsxId}"
+              - !Sub "arn:aws:fsx:${AWS::Region}:${AWS::AccountId}:task/*"
+          - Sid: "DataRepoTaskRead"
+            Effect: Allow
+            Action:
+              - "fsx:DescribeDataRepositoryTasks"
+            Resource:
+              - "*"
