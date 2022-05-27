@@ -56,11 +56,10 @@ Newer persistent file systems can automatically export data back to S3, but scra
 Upload the parallel-cluster-cryosparc.yaml configuration file (with all of the <placeholders> filled in) and the parallel-cluster-post-install.sh script to your S3 bucket.
 
 ### Environment
-We recommend using [AWS CloudShell|https://aws.amazon.com/cloudshell/] to quickly set up an environment that already has the credentials and command line tools you'll need to get started. [The AWS CloudShell Console|https://console.aws.amazon.com/cloudshell] already has credentials to your AWS account, the AWS CLI, and Python installed. If you're not using CloudShell, make sure you have these installed in your local environment before continuing.
+We recommend using ![AWS CloudShell](https://aws.amazon.com/cloudshell/) to quickly set up an environment that already has the credentials and command line tools you'll need to get started. ![The AWS CloudShell Console](https://console.aws.amazon.com/cloudshell) already has credentials to your AWS account, the AWS CLI, and Python installed. If you're not using CloudShell, make sure you have these installed in your local environment before continuing.
 
 ### Install ParallelCluster
-Follow the instructions to install AWS ParallelCluster into a virtual environment
-https://docs.aws.amazon.com/parallelcluster/latest/ug/install-v3-virtual-environment.html
+Follow the instructions in the ![AWS ParallelCluster documentation](https://docs.aws.amazon.com/parallelcluster/latest/ug/install-v3-virtual-environment.html) to install AWS ParallelCluster into a virtual environment
 
 ### Copy the ParallelCluster config file from S3
 Copy config file from S3
@@ -75,7 +74,7 @@ If you were starting from scratch, you would run pcluster config to generate a c
 pcluster create-cluster --cluster-name cryosparc-cluster --cluster-configuration parallel-cluster-cryosparc.yaml 
 ```
 
-Check the status of the cluster creation using the pcluster CLI or using the [AWS CloudFormation console|https://console.aws.amazon.com/cloudformation/]
+Check the status of the cluster creation using the pcluster CLI or using the ![AWS CloudFormation console](https://console.aws.amazon.com/cloudformation/)
 
 ```bash
 pcluster describe-cluster --cluster-name cryosparc-cluster
