@@ -82,7 +82,7 @@ pcluster describe-cluster --cluster-name cryosparc-cluster
 
 Hint: If you're having trouble with the stack rolling back due to a failure provisioning the head node first verify that your public subnet automatically creates Ipv4 addresses and allows DNS. If you're still having issues, re-create the cluster using the ```--rollback-on-failure false``` flag. This will keep CloudFormation from immediately de-provisioning the resources in the cluster. Search for "HeadNode" in the list of Stack resources. Click on the instance ID link. Check the box to the left of the node, and select Actions > Monitor and troubleshoot > Get system log. 
 
-Once your cluster has been provisioned, you are ready to continue using AWS ParallelCluster to run your cryoSPARC jobs as described in their documentation!
+Once your cluster has been provisioned, you are ready to continue using AWS ParallelCluster to run your cryoSPARC jobs as described ![in their documentation](https://guide.cryosparc.com/deploy/cryosparc-on-aws)!
 
 ## License
 
