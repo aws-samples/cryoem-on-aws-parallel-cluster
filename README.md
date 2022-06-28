@@ -19,9 +19,10 @@ Paste the license id as an input to the ParallelCluster configuration file.
 
 ## Prerequisites: Networking, Security, and Compute Availability
 
-Most customers start with a default VPC, which has public and private subnets balanced across multiple Availability Zones (AZs). However, ParallelCluster is a single-AZ service due to its latency requirements and cluster placement groups, so unbalanced, single-AZ subnets must be deployed to support this. For the compute notes, we created a single large private subnet a larger number of IP addresses. For the head node, we created a single public subnet with minimal IP addresses. 
+A typical use of a default VPC has public and private subnets balanced across multiple Availability Zones (AZs). However, HPC clusters (like ParallelCluster) usually prefer a single-AZ so they can keep communication latency low and use Cluster Placement Groups. For the compute nodes, you can create a large private subnet with a relatively large number of IP addresses. Then, you can create a public subnet with minimal IP addresses, since it will only contain the head node.  
 
-HPC EC2 instances like the ![P4d family](https://aws.amazon.com/ec2/instance-types/p4/) aren’t  available in every AZ. To determine which AZ in a given Region has the required compute families, use the ![AWS CLI](https://aws.amazon.com/cli/) ![describe-instance-type-offerings](https://docs.aws.amazon.com/cli/latest/reference/ec2/describe-instance-type-offerings.html) command. The easiest way to do this is to copy and paste the following command into ![CloudShell](https://us-west-2.console.aws.amazon.com/cloudshell), which will quickly create and configure an environment to run AWS CLI commands.
+HPC EC2 instances like the ![P4d family](https://aws.amazon.com/ec2/instance-types/p4/) aren’t available in every AZ. That means we need to determine which AZ in a given Region has all the compute families we need. We can do that with the ![AWS CLI](https://aws.amazon.com/cli/) ![describe-instance-type-offerings](https://docs.aws.amazon.com/cli/latest/reference/ec2/describe-instance-type-offerings.html) command. The easiest way to do this is to just below into ![CloudShell](https://us-west-2.console.aws.amazon.com/cloudshell), which provides a shell environment ready to issue AWS CLI commands in a few minutes. After the CloudShell environment is provisioned, copy and paste the text into the shell, and provide your desired region in the bracketed placeholder.
+
 
 ```bash
 aws ec2 describe-instance-type-offerings \
@@ -41,14 +42,15 @@ You’ll also need to create an EC2 SSH key pair so that you can SSH into the he
 Create a new S3 bucket for your input data. Replace the <S3-BUCKET> placeholders in the ParallelCluster configuration file with the name of your bucket.
 
 The data transfer mechanism to move data from instruments into S3 depends on the connectivity in the lab environment and the volume of data to be transferred. We recommend ![AWS DataSync](https://aws.amazon.com/datasync/), which easily automates secure data transfer from on-premises into the cloud with minimal development effort. ![Storage Gateway File Gateway](https://aws.amazon.com/storagegateway/file/) is another viable option, especially if lab connectivity is limited or continued two-way access from on-premises to the transferred data sets is required. Both DataSync and Storage Gateway ![can be bandwidth throttled](https://docs.aws.amazon.com/datasync/latest/userguide/working-with-task-executions.html) to protect non-HPC business-critical network constraints. 
-The S3 CLI and existing partner data transfer implementations can also support getting started quickly without setting up new connections or data transfer configuration.
+
+Alternatively, you can use the ![AWS S3 CLI](https://docs.aws.amazon.com/cli/latest/reference/s3/) to transfer individual files, or use partner solution to get started quickly.
 
 
 ## Prerequisite: IAM Permissions
 
-While ParallelCluster is capable of creating its own least-privilege roles and policies to function, many Enterprise customers limit their AWS account users’ access to IAM actions. ParallelCluster also supports using pre-created IAM resources, which you can request from Thermo Fisher’s Central IT Services team. The required permissions and roles are ![provided in the ParallelCluster documentation](https://docs.aws.amazon.com/parallelcluster/latest/ug/iam-roles-in-parallelcluster-v3.html) to help customers get started quickly. 
+While ParallelCluster creates its own least-privilege roles and policies by default, many Enterprises limit their AWS account users’ access to IAM actions. ParallelCluster also supports using or adding pre-created IAM resources, which you can request to be pre-created for you by your IT services team. The required permissions and roles are ![provided in the ParallelCluster documentation](https://docs.aws.amazon.com/parallelcluster/latest/ug/iam-roles-in-parallelcluster-v3.html) to help you get started quickly.
 
-Newer persistent file systems can automatically export data back to S3, but scratch file systems don’t. However, customers can integrate a data export task into the ParallelCluster job scheduler so that every time a job completes, a data export is run transparently in the background.  However, this requires additional IAM Policy statements to be attached to the instance profile of the head node. The policy is in the file FSxLustreDataRepoTasksPolicy.yaml.
+You can provision your FSx file system as persistent or scratch. Persistent file systems can automatically export data back to Amazon S3, but scratch file systems don’t. The example in this GitHub repo uses scratch, since it is provisioning a benchmark environment rather than a production environment. If you want to integrate a data export task into the ParallelCluster job scheduler so that every time a job completes, a data export is run transparently in the background, this requires additional IAM Policy statements to be attached to the instance profile of the head node. The policy is in the file FSxLustreDataRepoTasksPolicy.yml. Make sure the role that you’re using to execute your ParallelCluster provisioning includes this policy if you intend to run the export.
 
 ## Let's build!
 
@@ -84,6 +86,17 @@ pcluster describe-cluster --cluster-name cryosparc-cluster
 Hint: If you're having trouble with the stack rolling back due to a failure provisioning the head node first verify that your public subnet automatically creates Ipv4 addresses and allows DNS. If you're still having issues, re-create the cluster using the ```--rollback-on-failure false``` flag. This will keep CloudFormation from immediately de-provisioning the resources in the cluster. Search for "HeadNode" in the list of Stack resources. Click on the instance ID link. Check the box to the left of the node, and select Actions > Monitor and troubleshoot > Get system log. 
 
 Once your cluster has been provisioned, you are ready to continue using AWS ParallelCluster to run your cryoSPARC jobs as described ![in their documentation](https://guide.cryosparc.com/deploy/cryosparc-on-aws)!
+
+
+## Clean Up
+
+To clean up your cluster, use ParallelCluster's delete-cluster command to de-provision the underlying resources in your cluster.
+
+```bash
+pcluster delete-cluster --cluster-name cryosparc-cluster
+```
+
+Once the cluster has been deleted, you can delete the files you uploaded to S3 and the S3 bucket itself, along with the data transfer solution you chose in the prerequisite sections.
 
 ## License
 
