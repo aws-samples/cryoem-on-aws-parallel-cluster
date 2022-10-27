@@ -1,6 +1,6 @@
 # Cryo-EM on AWS ParallelCluster
 
-This GitHub repository contains resources to deploy the solution described in the [HPC Blog for CryoSparc on AWS ParallelCLuster|<blog-url>]
+This GitHub repository contains resources to deploy the solution described in the [HPC Blog for CryoSparc on AWS ParallelCLuster|https://aws.amazon.com/blogs/hpc/how-thermo-fisher-scientific-accelerated-cryo-em-using-aws-parallelcluster/]
 
 ![Architecture](images/CryoSPARC-on-AWSParallelCluster.png)
 
