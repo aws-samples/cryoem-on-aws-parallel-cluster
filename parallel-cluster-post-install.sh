@@ -41,6 +41,7 @@ CRYOSPARC_INSTALL_PATH=${3:-/shared/cryosparc}
 CUDA_INSTALL_PATH=${4:-/shared/cuda}
 CUDA_VERSION=${5:-11.3.1}
 CUDA_LONG_VERSION=${6:-11.3.1_465.19.01}
+CRYOSPARC_VERSION=${7:-latest}
 
 # Install the AWS CLI
 pip3 install --upgrade awscli boto3
@@ -70,21 +71,19 @@ sed -i "s|@CUDA_VERSION@|${CUDA_VERSION}|g" /etc/profile.d/cuda.sh
 # Download cryoSPARC
 mkdir -p "${CRYOSPARC_INSTALL_PATH}"
 cd "${CRYOSPARC_INSTALL_PATH}" || return
-curl -L "https://get.cryosparc.com/download/master-latest/${CRYOSPARC_LICENSE_ID}" -o cryosparc_master.tar.gz
-curl -L "https://get.cryosparc.com/download/worker-latest/${CRYOSPARC_LICENSE_ID}" -o cryosparc_worker.tar.gz
+curl -L "https://get.cryosparc.com/download/master-${CRYOSPARC_VERSION}/${CRYOSPARC_LICENSE_ID}" -o cryosparc_master.tar.gz
+curl -L "https://get.cryosparc.com/download/worker-${CRYOSPARC_VERSION}/${CRYOSPARC_LICENSE_ID}" -o cryosparc_worker.tar.gz
 
 # Install cryoSPARC master process
 tar -xf cryosparc_master.tar.gz
+chown -R ${OSUSER}:${OSGROUP} /shared/cryosparc
 cd cryosparc_master || return
-./install.sh --license "${CRYOSPARC_LICENSE_ID}" \
-    --hostname "${HOSTNAME}" \
-    --dbpath "${CRYOSPARC_INSTALL_PATH}"/cryosparc_db \
+/bin/su -c "\"${CRYOSPARC_INSTALL_PATH}\"/cryosparc_master/install.sh \
+    --license \"${CRYOSPARC_LICENSE_ID}\" \
+    --hostname \"${HOSTNAME}\" \
+    --dbpath \"${CRYOSPARC_INSTALL_PATH}\"/cryosparc_db \
     --port 45000 \
-    --allowroot \
-    --yes
-
-# Start cryoSPARC master package
-"${CRYOSPARC_INSTALL_PATH}"/cryosparc_master/bin/cryosparcm start
+    --yes" - ${OSUSER}
 
 # Add CryoSPARC to the path
 cat > /etc/profile.d/cryosparc.sh << 'EOF'
@@ -93,20 +92,21 @@ EOF
 sed -i "s|@CRYOSPARC_INSTALL_PATH@|${CRYOSPARC_INSTALL_PATH}|g" /etc/profile.d/cryosparc.sh
 . /etc/profile.d/cryosparc.sh
 
-echo "export CRYOSPARC_FORCE_USER=true" >> "${CRYOSPARC_INSTALL_PATH}"/cryosparc_master/config.sh
 echo "export CRYOSPARC_FORCE_HOSTNAME=true" >> "${CRYOSPARC_INSTALL_PATH}"/cryosparc_master/config.sh
 echo "export CRYOSPARC_DISABLE_IMPORT_ON_MASTER=true" >> "${CRYOSPARC_INSTALL_PATH}"/cryosparc_master/config.sh
 
 # Install cryoSPARC work package
 cd "${CRYOSPARC_INSTALL_PATH}" || return
 tar -xf cryosparc_worker.tar.gz
-cd cryosparc_worker || return
-./install.sh --license "${CRYOSPARC_LICENSE_ID}" \
-    --cudapath "${CUDA_INSTALL_PATH}/${CUDA_VERSION}" \
-    --yes
-
-rm "${CRYOSPARC_INSTALL_PATH}"/*.tar.gz
 chown -R ${OSUSER}:${OSGROUP} /shared/cryosparc
+cd cryosparc_worker || return
+/bin/su -c "\"${CRYOSPARC_INSTALL_PATH}\"/cryosparc_worker/install.sh \
+    --license \"${CRYOSPARC_LICENSE_ID}\" \
+    --cudapath \"${CUDA_INSTALL_PATH}/${CUDA_VERSION}\" \
+    --yes" - ${OSUSER}
+
+# Clean up
+rm "${CRYOSPARC_INSTALL_PATH}"/*.tar.gz
 
 # Start cluster
 /bin/su -c "${CRYOSPARC_INSTALL_PATH}/cryosparc_master/bin/cryosparcm start" - ${OSUSER}
