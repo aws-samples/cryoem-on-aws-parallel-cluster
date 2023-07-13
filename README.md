@@ -2,7 +2,7 @@
 
 This GitHub repository contains resources to deploy the solution described in the [HPC Blog for CryoSparc on AWS ParallelCLuster](https://aws.amazon.com/blogs/hpc/how-thermo-fisher-scientific-accelerated-cryo-em-using-aws-parallelcluster/). It was updated July 2023 to align with the latest ParallelCluster configuration file format. 
 
-[Architecture](images/CryoSPARC-on-AWSParallelCluster.png)
+![Architecture](images/CryoSPARC-on-AWSParallelCluster.png)
 
 This solution includes the following resources:
 * YAML configuration file for AWS ParallelCluster, either: 
