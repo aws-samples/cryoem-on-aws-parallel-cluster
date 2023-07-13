@@ -6,6 +6,8 @@ HeadNode:
   Networking:
     SubnetId: <SMALL-PUBLIC-SUBNET-ID>
     ElasticIp: true
+    SecurityGroups:
+      - <HEAD-NODE-SECURITY-GROUP-ID>
   Ssh:
     KeyName: <EC2-KEY-PAIR-NAME>
   LocalStorage:
@@ -54,6 +56,8 @@ Scheduling:
       Networking:
         SubnetIds:
           - <LARGE-PRIVATE-SUBNET-ID>
+        SecurityGroups:
+          - <NODE-SECURITY-GROUP-ID>
         PlacementGroup:
           Enabled: true
       ComputeSettings:
@@ -73,6 +77,8 @@ Scheduling:
       Networking:
         SubnetIds:
           - <LARGE-PRIVATE-SUBNET-ID>
+        SecurityGroups:
+          - <NODE-SECURITY-GROUP-ID>
         PlacementGroup:
           Enabled: true
       ComputeSettings:
@@ -106,6 +112,8 @@ Scheduling:
       Networking:
         SubnetIds:
           - <LARGE-PRIVATE-SUBNET-ID>
+        SecurityGroups:
+          - <NODE-SECURITY-GROUP-ID>
         PlacementGroup:
           Enabled: true
       ComputeSettings:
@@ -125,6 +133,8 @@ Scheduling:
       Networking:
         SubnetIds:
           - <LARGE-PRIVATE-SUBNET-ID>
+        SecurityGroups:
+          - <NODE-SECURITY-GROUP-ID>
         PlacementGroup:
           Enabled: true
       ComputeSettings:
@@ -144,6 +154,8 @@ Scheduling:
       Networking:
         SubnetIds:
           - <LARGE-PRIVATE-SUBNET-ID>
+        SecurityGroups:
+          - <NODE-SECURITY-GROUP-ID>
         PlacementGroup:
           Enabled: true
       ComputeSettings:

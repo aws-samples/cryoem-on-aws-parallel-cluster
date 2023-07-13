@@ -3,12 +3,14 @@ Image:
   Os: alinux2
 Iam:
   Roles:
-    LambdaFunctionsRole: <PClusterLambdaRole>
+    LambdaFunctionsRole: <PClusterLambdaRoleArn>
 HeadNode:
   InstanceType: c5a.4xlarge
   Networking:
     SubnetId: <SMALL-PUBLIC-SUBNET-ID>
     ElasticIp: true
+    SecurityGroups:
+      - <HEAD-NODE-SECURITY-GROUP-ID>
   Ssh:
     KeyName: <EC2-KEY-PAIR-NAME>
   LocalStorage:
@@ -25,16 +27,13 @@ HeadNode:
         - s3://<BUCKET-NAME>/parallel-cluster-post-install.sh
         - <CRYOSPARC-LICENSE>
   Iam:
-    S3Access:
-      - BucketName: <S3-BUCKET-NAME>
-    InstanceRole:
-      InstanceRole: <PClusterInstanceRole>
+    InstanceRole: <PClusterInstanceRoleArn>
 Scheduling:
   Scheduler: slurm
   SlurmQueues:
-    Iam:
-      InstanceRole: <PClusterInstanceRole>
     - Name: gpu-t4
+      Iam:
+        InstanceRole: <PClusterInstanceRoleArn>
       CapacityType: ONDEMAND
       ComputeResources:
         - Name: g4dn-12xlarge
@@ -61,6 +60,8 @@ Scheduling:
       Networking:
         SubnetIds:
           - <LARGE-PRIVATE-SUBNET-ID>
+        SecurityGroups:
+          - <NODE-SECURITY-GROUP-ID>
         PlacementGroup:
           Enabled: true
       ComputeSettings:
@@ -68,6 +69,8 @@ Scheduling:
           EphemeralVolume:
             MountDir: /scratch
     - Name: gpu-a100
+      Iam:
+        InstanceRole: <PClusterInstanceRoleArn>
       CapacityType: ONDEMAND
       ComputeResources:
         - Name: p4d-24xlarge
@@ -80,6 +83,8 @@ Scheduling:
       Networking:
         SubnetIds:
           - <LARGE-PRIVATE-SUBNET-ID>
+        SecurityGroups:
+          - <NODE-SECURITY-GROUP-ID>
         PlacementGroup:
           Enabled: true
       ComputeSettings:
@@ -87,6 +92,8 @@ Scheduling:
           EphemeralVolume:
             MountDir: /scratch
     - Name: gpu-v100
+      Iam:
+        InstanceRole: <PClusterInstanceRoleArn>
       CapacityType: ONDEMAND
       ComputeResources:
         - Name: p3-2xlarge
@@ -113,6 +120,8 @@ Scheduling:
       Networking:
         SubnetIds:
           - <LARGE-PRIVATE-SUBNET-ID>
+        SecurityGroups:
+          - <NODE-SECURITY-GROUP-ID>
         PlacementGroup:
           Enabled: true
       ComputeSettings:
@@ -120,6 +129,8 @@ Scheduling:
           EphemeralVolume:
             MountDir: /scratch
     - Name: cpu
+      Iam:
+        InstanceRole: <PClusterInstanceRoleArn>
       CapacityType: ONDEMAND
       ComputeResources:
         - Name: c5n-18xlarge
@@ -132,6 +143,8 @@ Scheduling:
       Networking:
         SubnetIds:
           - <LARGE-PRIVATE-SUBNET-ID>
+        SecurityGroups:
+          - <NODE-SECURITY-GROUP-ID>
         PlacementGroup:
           Enabled: true
       ComputeSettings:
@@ -139,6 +152,8 @@ Scheduling:
           EphemeralVolume:
             MountDir: /scratch
     - Name: gpu-a100-spot
+      Iam:
+        InstanceRole: <PClusterInstanceRoleArn>
       CapacityType: SPOT
       ComputeResources:
         - Name: p4d-24xlarge-spot
@@ -151,6 +166,8 @@ Scheduling:
       Networking:
         SubnetIds:
           - <LARGE-PRIVATE-SUBNET-ID>
+        SecurityGroups:
+          - <NODE-SECURITY-GROUP-ID>
         PlacementGroup:
           Enabled: true
       ComputeSettings:
