@@ -119,7 +119,7 @@ do
 "qdel_cmd_tpl": "scancel {{ cluster_job_id }}",
 "worker_bin_path": "@CRYOSPARC_INSTALL_PATH@/cryosparc_worker/bin/cryosparcw",
 "title": "cryosparc-cluster",
-"cache_path": "",
+"cache_path": "/scratch",
 "qinfo_cmd_tpl": "sinfo",
 "qsub_cmd_tpl": "sbatch {{ script_path_abs }}",
 "qstat_cmd_tpl": "squeue -j {{ cluster_job_id }}",
