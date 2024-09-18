@@ -33,7 +33,7 @@ HeadNode:
             - /fsx
   Iam:
     S3Access:
-      - BucketName: rpomaris-cryosparc-pcluster
+      - BucketName: <S3-BUCKET-NAME>
 Scheduling:
   Scheduler: slurm
   SlurmQueues:
