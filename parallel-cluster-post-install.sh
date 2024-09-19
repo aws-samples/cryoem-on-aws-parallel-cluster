@@ -58,8 +58,6 @@ pip3 install --upgrade awscli boto3
 
 set -e
 
-#yum -y update
-
 # Configure AWS
 AWS_DEFAULT_REGION=$(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone | rev | cut -c 2- | rev)
 aws configure set default.region "${AWS_DEFAULT_REGION}"
@@ -146,8 +144,6 @@ if [ ! -x "$(command -v "cryosparcm")" ]; then
   /bin/su -c "cd ${CRYOSPARC_INSTALL_PATH}/cryosparc_worker && ./install.sh --license "${CRYOSPARC_LICENSE_ID}" \
       --cudapath "${CUDA_INSTALL_PATH}/${CUDA_VERSION}" \
       --yes" - $OSUSER
-  
-  #rm "${CRYOSPARC_INSTALL_PATH}"/*.tar.gz
   
   # Once again, re-align permissions
   chown -R ${OSUSER}:${OSGROUP} ${CRYOSPARC_INSTALL_PATH}/cryosparc_worker
@@ -317,6 +313,7 @@ done
 set -e
 
 # VALIDATE CRYOSPARC
+# This stage can be run after cluster creation.
 #echo "Validating lanes"
 #/bin/su -c "mkdir -p ${PROJECT_DATA_PATH}/validate-lanes" - ${OSUSER}
 #/bin/su -c "cd ${CRYOSPARC_INSTALL_PATH} && ${CRYOSPARC_INSTALL_PATH}/cryosparc_master/bin/cryosparcm cluster validate cpu --projects_dir ${PROJECT_DATA_PATH}/validate-lanes" - ${OSUSER}
@@ -339,5 +336,8 @@ systemctl stop cryosparc-supervisor.service
 /bin/su -c "cd ${CRYOSPARC_INSTALL_PATH} && ${CRYOSPARC_INSTALL_PATH}/cryosparc_master/bin/cryosparcm stop" - ${OSUSER}
 systemctl start cryosparc-supervisor.service
 set -e 
+
+#Clean up the .tar.gz:
+rm "${CRYOSPARC_INSTALL_PATH}"/*.tar.gz
 
 echo "CryoSPARC setup complete"
