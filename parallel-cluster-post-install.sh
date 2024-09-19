@@ -208,8 +208,8 @@ do
             PARTITION_RAM_GB_MULTIPLIER=2.0
             SBATCH_EXTRA="#SBATCH --gres=gpu:{{ num_gpu }}"
         ;;
-     	multi-az-t4*)
-	    echo "T4 GPU: $PARTITION"
+     	gpu-l4*)
+	    echo "L4 GPU: $PARTITION"
             PARTITION_CACHE_PATH="/scratch"
             PARTITION_CACHE_RESERVE=10000
             PARTITION_CACHE_QUOTA=800000
@@ -224,36 +224,21 @@ do
             PARTITION_RAM_GB_MULTIPLIER=2.0
             SBATCH_EXTRA="#SBATCH --gres=gpu:{{ num_gpu }}"
         ;;
-        multi-az-a10-*)
-	    echo "A10 GPU: $PARTITION"
+        cpu*)
+	    echo "X86: $PARTITION"
             PARTITION_CACHE_PATH="/scratch"
             PARTITION_CACHE_RESERVE=10000
             PARTITION_CACHE_QUOTA=800000
             PARTITION_RAM_GB_MULTIPLIER=2.0
             SBATCH_EXTRA="#SBATCH --gres=gpu:{{ num_gpu }}"
         ;;
-        gpu-a10-*)
-	    echo "A10 GPU: $PARTITION"
+        gpu-a100-spot*)
+	    echo "A100 GPU SPOT: $PARTITION"
             PARTITION_CACHE_PATH="/scratch"
             PARTITION_CACHE_RESERVE=10000
             PARTITION_CACHE_QUOTA=800000
             PARTITION_RAM_GB_MULTIPLIER=2.0
             SBATCH_EXTRA="#SBATCH --gres=gpu:{{ num_gpu }}"
-        ;;
-        gpu-v100*)
-	    echo "V100 GPU: $PARTITION"
-            PARTITION_CACHE_PATH=""
-            PARTITION_CACHE_RESERVE=10000
-            PARTITION_CACHE_QUOTA=null
-            PARTITION_RAM_GB_MULTIPLIER=2.0
-            SBATCH_EXTRA="#SBATCH --gres=gpu:{{ num_gpu }}"
-            ;;
-        *)
-            PARTITION_CACHE_PATH=""
-            PARTITION_CACHE_RESERVE=10000
-            PARTITION_CACHE_QUOTA=null
-            PARTITION_RAM_GB_MULTIPLIER=2.0
-            SBATCH_EXTRA=""
         ;;
     esac
 

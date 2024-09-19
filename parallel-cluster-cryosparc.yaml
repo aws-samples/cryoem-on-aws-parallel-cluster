@@ -37,7 +37,7 @@ HeadNode:
 Scheduling:
   Scheduler: slurm
   SlurmQueues:
-    - Name: gpu-g4
+    - Name: gpu-t4
       CapacityType: ONDEMAND
       ComputeResources:
         - Name: g4dn-12xlarge
@@ -72,7 +72,7 @@ Scheduling:
         LocalStorage:
           EphemeralVolume:
             MountDir: /scratch
-    - Name: gpu-g6
+    - Name: gpu-l4
       CapacityType: ONDEMAND
       ComputeResources:
         - Name: g6e-12xlarge
