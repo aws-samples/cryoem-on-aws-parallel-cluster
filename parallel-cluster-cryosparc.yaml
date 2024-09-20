@@ -1,11 +1,14 @@
-Region: <REGION>
+DevSettings:
+  Timeouts:
+    HeadNodeBootstrapTimeout: 5400
+Region: us-east-1
 Image:
   Os: alinux2
 HeadNode:
   InstanceType: c5a.4xlarge
   Networking:
     SubnetId: <SMALL-PUBLIC-SUBNET-ID>
-    ElasticIp: true
+    ElasticIp: true 
     SecurityGroups:
       - <HEAD-NODE-SECURITY-GROUP-ID>
   Ssh:
@@ -19,10 +22,15 @@ HeadNode:
     Enabled: true
   CustomActions:
     OnNodeConfigured:
-      Script: s3://<BUCKET-NAME>/parallel-cluster-post-install.sh
-      Args:
-        - s3://<BUCKET-NAME>/parallel-cluster-post-install.sh
-        - <CRYOSPARC-LICENSE>
+      Sequence:
+        - Script: s3://<BUCKET-NAME>/parallel-cluster-post-install.sh
+          Args:
+            - <CRYOSPARC-LICENSE>
+            - /shared/cryosparc
+            - /shared/cuda
+            - 11.8.0
+            - 11.8.0_520.61.05
+            - /fsx
   Iam:
     S3Access:
       - BucketName: <S3-BUCKET-NAME>
@@ -64,11 +72,18 @@ Scheduling:
         LocalStorage:
           EphemeralVolume:
             MountDir: /scratch
-    - Name: gpu-a100
+    - Name: gpu-l4
       CapacityType: ONDEMAND
       ComputeResources:
-        - Name: p4d-24xlarge
-          InstanceType: p4d.24xlarge
+        - Name: g6e-12xlarge
+          InstanceType: g6e.12xlarge
+          MinCount: 0
+          MaxCount: 20
+          DisableSimultaneousMultithreading: true
+          Efa:
+            Enabled: false
+        - Name: g6e-16xlarge
+          InstanceType: g6e.16xlarge
           MinCount: 0
           MaxCount: 20
           DisableSimultaneousMultithreading: true
@@ -85,25 +100,11 @@ Scheduling:
         LocalStorage:
           EphemeralVolume:
             MountDir: /scratch
-    - Name: gpu-v100
+    - Name: gpu-a100
       CapacityType: ONDEMAND
       ComputeResources:
-        - Name: p3-2xlarge
-          InstanceType: p3.2xlarge
-          MinCount: 0
-          MaxCount: 20
-          DisableSimultaneousMultithreading: true
-          Efa:
-            Enabled: false
-        - Name: p3-8xlarge
-          InstanceType: p3.8xlarge
-          MinCount: 0
-          MaxCount: 20
-          DisableSimultaneousMultithreading: true
-          Efa:
-            Enabled: false
-        - Name: p3-16xlarge
-          InstanceType: p3.16xlarge
+        - Name: p4d-24xlarge
+          InstanceType: p4d.24xlarge
           MinCount: 0
           MaxCount: 20
           DisableSimultaneousMultithreading: true
