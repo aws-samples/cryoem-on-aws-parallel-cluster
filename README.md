@@ -1,7 +1,8 @@
 # Cryo-EM on AWS ParallelCluster and Parallel Computing Service
 
 This GitHub repository contains resources to deploy the solution described in the [HPC Blog for CryoSparc on AWS ParallelCLuster](https://aws.amazon.com/blogs/hpc/how-thermo-fisher-scientific-accelerated-cryo-em-using-aws-parallelcluster/). It was updated September 2024 to align with the latest ParallelCluster configuration file format. 
-NOTE: This repository was updated with resources to run CryoSAPRC on ([AWS Parallel Computing Service (PCS)](https://aws.amazon.com/pcs/)). Please see the last section for additional information."
+
+NOTE: This repository was updated to add resources to run CryoSAPRC on ([AWS Parallel Computing Service (PCS)](https://aws.amazon.com/pcs/)), but maintianed the original instructions to run on AWS ParallelCluster. Please see the last section if you'd like to try PCS.
 
 ![Architecture](images/CryoSPARC-on-AWSParallelCluster.png)
 
@@ -106,7 +107,7 @@ pcluster delete-cluster --cluster-name cryosparc-cluster
 Once the cluster has been deleted, you can delete the files you uploaded to S3 and the S3 bucket itself, along with the data transfer solution you chose in the prerequisite sections.
 
 ## Parallel Computing Service (PCS)
-AWS has additionally published a blog post on how to run CryoSPARC on AWS Parallel Computing Service (PCS), a managed service that makes it easier for you to run and scale your high performance computing (HPC) workloads and build scientific and engineering models on AWS using Slurm. You can find the post-install sample code in ```parallel-computing-service/pcs-cryosparc-post-install.sh``` as referenced in the Scalable Cryo-EM on AWS Parallel Computing Service (PCS) blog for installation on the login node.  The full architecture of the blog is as follows and can be found on the post.
+AWS will publish a blog post on how to run CryoSPARC on AWS Parallel Computing Service (PCS), a managed service that makes it easier for you to run and scale your high performance computing (HPC) workloads and build scientific and engineering models on AWS using Slurm. You can find the post-install sample code in ```parallel-computing-service/pcs-cryosparc-post-install.sh``` as referenced in the Scalable Cryo-EM on AWS Parallel Computing Service (PCS) blog for installation on the login node.  The full architecture of the blog is as follows and can be found on the post.
 
 ![CryoSPARC on PCS Architecture](images/CryoSPARC-on-PCS.png)
 
