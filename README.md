@@ -106,7 +106,7 @@ pcluster delete-cluster --cluster-name cryosparc-cluster
 Once the cluster has been deleted, you can delete the files you uploaded to S3 and the S3 bucket itself, along with the data transfer solution you chose in the prerequisite sections.
 
 ## Parallel Computing Service (PCS)
-AWS has additionally published a blog post on how to run CryoSPARC on AWS Parallel Computing Service (PCS), a managed service that makes it easier for you to run and scale your high performance computing (HPC) workloads and build scientific and engineering models on AWS using Slurm. You can find the post-install sample code in ```pcs/pcs-cryosparc-post-install.sh``` as referenced in the Scalable Cryo-EM on AWS Parallel Computing Service (PCS) blog for installation on the login node.  The full architecture of the blog is as follows and can be found on the post.
+AWS has additionally published a blog post on how to run CryoSPARC on AWS Parallel Computing Service (PCS), a managed service that makes it easier for you to run and scale your high performance computing (HPC) workloads and build scientific and engineering models on AWS using Slurm. You can find the post-install sample code in ```parallel-computing-service/pcs-cryosparc-post-install.sh``` as referenced in the Scalable Cryo-EM on AWS Parallel Computing Service (PCS) blog for installation on the login node.  The full architecture of the blog is as follows and can be found on the post.
 
 ![CryoSPARC on PCS Architecture](images/CryoSPARC-on-PCS.png)
 
