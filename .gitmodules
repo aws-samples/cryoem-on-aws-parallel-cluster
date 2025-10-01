@@ -1,0 +1,3 @@
+[submodule "deployment/aws-hpc-recipe"]
+	path = deployment/aws-hpc-recipe
+	url = https://github.com/aws-samples/aws-hpc-recipes.git
