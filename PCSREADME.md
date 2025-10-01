@@ -90,14 +90,15 @@ Alternatively, you can use the [AWS S3 CLI](https://docs.aws.amazon.com/cli/late
 ## Deployment Steps
 
 1. **Clone the GitHub Repository**  
-   Clone this repository. View this [README](deployment/aws-hpc-recipe/recipes/pcs/getting_started/README.md) for deploying a PCS cluster. To create a PCS cluster with the right shared storage for this example, you can use the PCS guidance recipes for a one-click deployment, which uses AWS CloudFormation to launch an entire cluster, quickly.
-cryoem-on-aws-parallel-cluster/deployment/aws-hpc-recipe/recipes/pcs/getting_started/README.md
+   Clone this repository. View this [README](deployment/aws-hpc-recipe/recipes/pcs/getting_started/README.md) for deploying a PCS cluster. To create a PCS cluster with the right shared storage for this example, you can use the PCS guidance recipes for a one-click deployment, which uses AWS CloudFormation to launch an entire cluster, quickly. 
+
    ```bash
    git clone https://github.com/aws-samples/cryoem-on-aws-parallel-cluster.git
    cd deployment/aws-hpc-recipe/recipes/pcs/getting_started
+   cat README.md
    ```
 
-1. **Launch the PCS Cluster Using CloudFormation**
+2. **Launch the PCS Cluster Using CloudFormation**
    - Navigate to the AWS Management Console → **CloudFormation**.
    - Choose **Create stack** → **With new resources (standard)**.
    - Upload the PCS template from the cloned repo.
@@ -113,7 +114,7 @@ cryoem-on-aws-parallel-cluster/deployment/aws-hpc-recipe/recipes/pcs/getting_sta
 
    ![CloudFormation stacks](assets/cfnstackhpctemplate.png)
 
-2. **Update FSx for Lustre Throughput**  
+3. **Update FSx for Lustre Throughput**  
    Increase throughput per unit of storage to support CryoSPARC installation:
 
    ```bash
@@ -122,7 +123,7 @@ cryoem-on-aws-parallel-cluster/deployment/aws-hpc-recipe/recipes/pcs/getting_sta
 
    This may take up to 20 minutes to complete.
 
-3. **Retrieve Compute Node Group Information**  
+4. **Retrieve Compute Node Group Information**  
    Run the following to get AMI ID, Instance Profile ARN, and Launch Template ID:
 
    ```bash
@@ -131,7 +132,7 @@ cryoem-on-aws-parallel-cluster/deployment/aws-hpc-recipe/recipes/pcs/getting_sta
 
    Save the output values for use in the next step.
 
-4. **Create Additional Compute Node Groups**  
+5. **Create Additional Compute Node Groups**  
    Run the following commands to create CPU, single-GPU, and multi-GPU node groups:
 
    ```bash
@@ -142,7 +143,7 @@ cryoem-on-aws-parallel-cluster/deployment/aws-hpc-recipe/recipes/pcs/getting_sta
    aws pcs create-compute-node-group        --compute-node-group-name compute-multi-gpu        --cluster-identifier <PCS_CLUSTER_NAME>        --region <REGION>        --subnet-ids <PRIVATE_SUBNET_ID>        --custom-launch-template id=<COMPUTE_LT_ID>,version='1'        --ami-id <AMI_ID>        --iam-instance-profile <INSTANCE_PROFILE_ARN>        --scaling-config minInstanceCount=0,maxInstanceCount=2        --instance-configs instanceType=g6.48xlarge
    ```
 
-5. **Verify Node Group Creation**  
+6. **Verify Node Group Creation**  
    Confirm that each node group is active:
 
    ```bash
@@ -151,7 +152,7 @@ cryoem-on-aws-parallel-cluster/deployment/aws-hpc-recipe/recipes/pcs/getting_sta
 
    Wait until the status returns `ACTIVE`.
 
-6. **Create Queues for Node Groups**  
+7. **Create Queues for Node Groups**  
    Map queues to node groups so CryoSPARC can submit jobs to the right hardware:
 
    ```bash
@@ -162,7 +163,7 @@ cryoem-on-aws-parallel-cluster/deployment/aws-hpc-recipe/recipes/pcs/getting_sta
    aws pcs create-queue        --queue-name multi-gpu-queue        --cluster-identifier <PCS_CLUSTER_NAME>        --compute-node-group-configurations computeNodeGroupId=<COMPUTE_MULTI_GPU_NODE_GROUP_ID>
    ```
 
-7. **Verify Queues**  
+8. **Verify Queues**  
    Check that the queues are created and active:
    ```bash
    aws pcs get-queue         --region <REGION>         --cluster-identifier <PCS_CLUSTER_NAME>         --queue-identifier <PCS_QUEUE_NAME>
