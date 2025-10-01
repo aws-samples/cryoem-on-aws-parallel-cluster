@@ -90,7 +90,7 @@ Alternatively, you can use the [AWS S3 CLI](https://docs.aws.amazon.com/cli/late
 ## Deployment Steps
 
 1. **Clone the GitHub Repository**  
-   Clone this repository. Proceed to the HPC [recipes getting started folder](deployment/aws-hpc-recipe/recipes/pcs/getting_started/README.md) for deploying a PCS cluster.
+   Clone this repository. View [```deployment/aws-hpc-recipe/deployment/aws-hpc-recipe/recipes/pcs/getting_started/README.md```](deployment/aws-hpc-recipe/recipes/pcs/getting_started/README.md) for deploying a PCS cluster. To create a PCS cluster with the right shared storage for this example, you can use the PCS guidance recipes for a one-click deployment, which uses AWS CloudFormation to launch an entire cluster, quickly.
 
    ```bash
    git clone https://github.com/aws-samples/cryoem-on-aws-parallel-cluster.git
