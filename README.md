@@ -52,7 +52,6 @@ In order to be able to run this guidance and to use CryoSparc you need to have t
 
 - CryoSPARC license ([contact Structura Biotechnology to obtain](https://guide.cryosparc.com/licensing)).
 - [AWS CLI](https://aws.amazon.com/cli/) installed and configured.
-- See additional [prerequisites](https://docs.aws.amazon.com/pcs/latest/userguide/getting-started_prerequisites.html) from AWS PCS.
 - An SSH client.
 
 ### Environment
