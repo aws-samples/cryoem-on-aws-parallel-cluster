@@ -196,7 +196,7 @@ Alternatively, you can use the [AWS S3 CLI](https://docs.aws.amazon.com/cli/late
 3. **Download and Run CryoSPARC Installation Script**
 
    ```bash
-   wget https://raw.githubusercontent.com/aws-samples/cryoem-on-aws-parallel-cluster/refs/heads/main/parallel-computing-service/pcs-cryosparc-post-install.sh
+   wget https://raw.githubusercontent.com/aws-samples/cryoem-on-aws-parallel-cluster/refs/heads/main/source/pcs-cryosparc-post-install.sh
    chmod +x pcs-cryosparc-post-install.sh
    sudo ./pcs-cryosparc-post-install.sh <LICENSE_ID> /shared/cryosparc /shared/cuda 11.8.0 11.8.0_520.61.05 /shared
    ```
