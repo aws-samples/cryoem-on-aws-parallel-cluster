@@ -31,7 +31,7 @@ Below is the architecture model for this guidance.
 
 ## Cost
 
-_You are responsible for the cost of the AWS services used while running this Guidance. As of September 2025, the cost for running this Guidance with the default settings in the US East (N. Virginia) is approximately $762.96 per sample. This estimate is based on processing 1 sample (1 TB of data). Cost calculations were derived using the times measured under realistic workload conditions for each instance type._
+_You are responsible for the cost of the AWS services used while running this Guidance. As of September 2025, the cost for running this Guidance with the default settings in the US East (N. Virginia) is approximately $795.98 per sample. This estimate is based on processing 1 sample (1 TB of data). Cost calculations were derived using the times measured under realistic workload conditions for each instance type._
 
 Below you can find a cost breakdown for this estimate based on the resources this guidance runs and assuming the aforementioned working periods (1 sample, 1 TB of data).
 
@@ -41,6 +41,7 @@ Below you can find a cost breakdown for this estimate based on the resources thi
 | Amazon Elastic File Service (EFS)  | 100 GB Elastic Throughput                 | $ 30.00    |
 | Amazon FSx for Lustre              | 1.2TB SSD - 250 MBps/TiB                  | $ 252.35   |
 | AWS Parallel Compute Service (PCS) | Small Slurm Controller                    | $ 56.97    |
+| Amazon Elastic Compute Cloud (EC2) | (Login Node) 1 On-Demand c5a.4xlarge      | $ 33.02    |
 | Amazon Elastic Compute Cloud (EC2) | (CPU Group) 1 On-Demand c5a.8xlarge       | $ 0.16     |
 | Amazon Elastic Compute Cloud (EC2) | (Single-GPU Group) 1 On-Demand g6.4xlarge | $ 28.35    |
 | Amazon Elastic Compute Cloud (EC2) | (Multi-GPU Group) 1 On-Demand g6.48xlarge | $ 371.41   |
