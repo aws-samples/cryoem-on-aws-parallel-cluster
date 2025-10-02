@@ -2,7 +2,6 @@ Resources:
   DataRepoTaskIamPolicy:
     Type: "AWS::IAM::ManagedPolicy"
     Properties:
-      ManagedPolicyName: !Sub ${ProjectName}-FSxLustreDataRepoTasksPolicy
       PolicyDocument:
         Version: "2012-10-17"
         Statement:
@@ -19,4 +18,5 @@ Resources:
             Action:
               - "fsx:DescribeDataRepositoryTasks"
             Resource:
-              - "*"
+              - "arn:aws:fsx:${AWS::Region}:${AWS::AccountId}:*"
+              
