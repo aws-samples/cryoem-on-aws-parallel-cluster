@@ -13,7 +13,7 @@
   - [Deployment Steps](#deployment-steps)
   - [Running the Guidance](#running-the-guidance)
   - [Next Steps](#next-steps)
-    - [Install ChimeraX for Visualization](#install-chimerax-for-visualization)
+      - [Install ChimeraX for Visualization](#install-chimerax-for-visualization)
   - [Cleanup](#cleanup)
   - [FAQ, known issues, additional considerations, and limitations](#faq-known-issues-additional-considerations-and-limitations)
     - [AWS ParallelCluster](#aws-parallelcluster)
@@ -223,6 +223,7 @@ Alternatively, you can use the [AWS S3 CLI](https://docs.aws.amazon.com/cli/late
      [http://localhost:45000](http://localhost:45000)
    - Log in with your CryoSPARC user credentials.
      ![CryoSPARC Sign In](assets/cryosparcsigninpage.png)
+     
 7. **Download and Extract a Test Dataset**
 
 Download the [movies test set](https://guide.cryosparc.com/processing-data/get-started-with-cryosparc-introductory-tutorial) from the CryoSparc introductory tutorial.
@@ -289,7 +290,7 @@ aws cloudformation delete-stack --stack-name <pcs_cloudformation_stack_name>
 
 AWS ParallelCluster offers an alternative deployment method for running CryoSPARC workloads. AWS ParallelCluster might be preferred when you need more granular control over your HPC infrastructure or require customized configurations that aren't available in PCS. It offers greater flexibility in cluster customization, including the ability to modify the underlying infrastructure, customize AMIs, and implement specific security configurations.
 
-In such situations where AWS ParallelCluster may be preferred, an AWS guidance is available [here](README.md).
+In such situations where AWS ParallelCluster may be preferred, an AWS guidance is available [here](ParallelClusterREADME.md).
 
 ## Notices
 
