@@ -13,7 +13,7 @@
   - [Deployment Steps](#deployment-steps)
   - [Running the Guidance](#running-the-guidance)
   - [Next Steps](#next-steps)
-      - [Install ChimeraX for Visualization](#install-chimerax-for-visualization)
+    - [Install ChimeraX for Visualization](#install-chimerax-for-visualization)
   - [Cleanup](#cleanup)
   - [FAQ, known issues, additional considerations, and limitations](#faq-known-issues-additional-considerations-and-limitations)
     - [AWS ParallelCluster](#aws-parallelcluster)
@@ -35,15 +35,15 @@ _You are responsible for the cost of the AWS services used while running this Gu
 
 Below you can find a cost breakdown for this estimate based on the resources this guidance runs and assuming the aforementioned working periods (1 sample, 1 TB of data).
 
-| AWS service                        | Dimensions                  | Cost [USD] |
-| ---------------------------------- | --------------------------- | ---------- |
-| AWS Simple Storage Service (S3)    | 1 TB w/ Intelligent Tiering | $ 23.72    |
-| Amazon Elastic File Service (EFS)  | 100 GB Elastic Throughput   | $ 30.00    |
-| Amazon FSx for Lustre              | 1.2TB SSD - 250 MBps/TiB    | $ 252.35   |
-| AWS Parallel Compute Service (PCS) | Small Slurm Controller      | $ 56.97    |
-| Amazon Elastic Compute Cloud (EC2) | 1 On-Demand c5a.8xlarge     | $ 0.16     |
-| Amazon Elastic Compute Cloud (EC2) | 1 On-Demand g6.4xlarge      | $ 28.35    |
-| Amazon Elastic Compute Cloud (EC2) | 1 On-Demand g6.48xlarge     | $ 371.41   |
+| AWS service                        | Dimensions                                | Cost [USD] |
+| ---------------------------------- | ----------------------------------------- | ---------- |
+| AWS Simple Storage Service (S3)    | 1 TB w/ Intelligent Tiering               | $ 23.72    |
+| Amazon Elastic File Service (EFS)  | 100 GB Elastic Throughput                 | $ 30.00    |
+| Amazon FSx for Lustre              | 1.2TB SSD - 250 MBps/TiB                  | $ 252.35   |
+| AWS Parallel Compute Service (PCS) | Small Slurm Controller                    | $ 56.97    |
+| Amazon Elastic Compute Cloud (EC2) | (CPU Group) 1 On-Demand c5a.8xlarge       | $ 0.16     |
+| Amazon Elastic Compute Cloud (EC2) | (Single-GPU Group) 1 On-Demand g6.4xlarge | $ 28.35    |
+| Amazon Elastic Compute Cloud (EC2) | (Multi-GPU Group) 1 On-Demand g6.48xlarge | $ 371.41   |
 
 _We recommend creating a [Budget](https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-managing-costs.html) through [AWS Cost Explorer](https://aws.amazon.com/aws-cost-management/aws-cost-explorer/) to help manage costs. Prices are subject to change. For full details, refer to the pricing webpage for each AWS service used in this Guidance._
 
@@ -90,7 +90,7 @@ Alternatively, you can use the [AWS S3 CLI](https://docs.aws.amazon.com/cli/late
 ## Deployment Steps
 
 1. **Clone the GitHub Repository**  
-   Clone this repository. View this [README](deployment/aws-hpc-recipe/recipes/pcs/getting_started/README.md) for deploying a PCS cluster. To create a PCS cluster with the right shared storage for this example, you can use the PCS guidance recipes for a one-click deployment, which uses AWS CloudFormation to launch an entire cluster, quickly. 
+   Clone this repository. View this [README](deployment/aws-hpc-recipe/recipes/pcs/getting_started/README.md) for deploying a PCS cluster. To create a PCS cluster with the right shared storage for this example, you can use the PCS guidance recipes for a one-click deployment, which uses AWS CloudFormation to launch an entire cluster, quickly.
 
    ```bash
    git clone https://github.com/aws-samples/cryoem-on-aws-parallel-cluster.git

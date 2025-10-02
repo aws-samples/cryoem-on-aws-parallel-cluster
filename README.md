@@ -30,19 +30,19 @@ Below is the architecture model for this guidance.
 
 ## Cost
 
-_You are responsible for the cost of the AWS services used while running this Guidance. As of September 2025, the cost for running this Guidance with the default settings in the US East (N. Virginia) is approximately $737.22 per sample. This estimate is based on processing 1 sample (1 TB of data). Cost calculations were derived using the times measured under realistic workload conditions for each instance type._
+_You are responsible for the cost of the AWS services used while running this Guidance. As of September 2025, the cost for running this Guidance with the default settings in the US East (N. Virginia) is approximately $915.71 per sample. This estimate is based on processing 1 sample (1 TB of data). Cost calculations were derived using the times measured under realistic workload conditions for each instance type._
 
 Below you can find a cost breakdown for this estimate based on the resources this guidance runs and assuming the aforementioned working periods (1 sample, 1 TB of data).
 
-| AWS service                        | Dimensions                  | Cost [USD] |
-| ---------------------------------- | --------------------------- | ---------- |
-| AWS Simple Storage Service (S3)    | 1 TB w/ Intelligent Tiering | $ 23.72    |
-| Amazon Elastic File Service (EFS)  | 100 GB Elastic Throughput   | $ 30.00    |
-| Amazon FSx for Lustre              | 1.2TB SSD - 250 MBps/TiB    | $ 252.35   |
-| AWS Parallel Compute Service (PCS) | Small Slurm Controller      | $ 31.23    |
-| Amazon Elastic Compute Cloud (EC2) | 1 On-Demand c5a.8xlarge     | $ 0.16     |
-| Amazon Elastic Compute Cloud (EC2) | 1 On-Demand g6.4xlarge      | $ 28.35    |
-| Amazon Elastic Compute Cloud (EC2) | 1 On-Demand g6.48xlarge     | $ 371.41   |
+| AWS service                        | Dimensions                                   | Cost [USD] |
+| ---------------------------------- | -------------------------------------------- | ---------- |
+| AWS Simple Storage Service (S3)    | 1 TB w/ Intelligent Tiering                  | $ 23.72    |
+| Amazon Elastic File Service (EFS)  | 100 GB Elastic Throughput                    | $ 30.00    |
+| Amazon FSx for Lustre              | 1.2TB SSD - 250 MBps/TiB                     | $ 252.35   |
+| Amazon Elastic Compute Cloud (EC2) | (Slurm Controller) 1 On-Demand g4dn-12xlarge | $ 209.72   |
+| Amazon Elastic Compute Cloud (EC2) | (CPU Group) 1 On-Demand c5a.8xlarge          | $ 0.16     |
+| Amazon Elastic Compute Cloud (EC2) | (Single-GPU Group) 1 On-Demand g6.4xlarge    | $ 28.35    |
+| Amazon Elastic Compute Cloud (EC2) | (Multi-GPU Group) 1 On-Demand g6.48xlarge    | $ 371.41   |
 
 _We recommend creating a [Budget](https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-managing-costs.html) through [AWS Cost Explorer](https://aws.amazon.com/aws-cost-management/aws-cost-explorer/) to help manage costs. Prices are subject to change. For full details, refer to the pricing webpage for each AWS service used in this Guidance._
 
@@ -59,6 +59,7 @@ In order to be able to run this guidance and to use CryoSparc you need to have t
 We recommend using [AWS CloudShell](https://aws.amazon.com/cloudshell/) to quickly set up an environment that already has the credentials and command line tools you'll need to get started. [The AWS CloudShell Console](https://console.aws.amazon.com/cloudshell) already has credentials to your AWS account, the AWS CLI, and Python installed. If you're not using CloudShell, make sure you have these installed in your local environment before continuing.
 
 ### Supported Regions
+
 Only the following regions are supported for this guidance:
 
 - United States (N. Virginia)
@@ -85,9 +86,11 @@ The data transfer mechanism to move data from instruments into S3 depends on the
 Alternatively, you can use the [AWS S3 CLI](https://docs.aws.amazon.com/cli/latest/reference/s3/) to transfer individual files, or use partner solution to get started quickly.
 
 ### CryoSPARC License
+
 First, you'll need to request a license from Structura. It can take a day or two to obtain the license, so request it before you get started. You'll use this license ID to replace the <CRYOSPARC-LICENSE> placeholder in the configuration file.
 
 ### Networking and Compute Availability
+
 A typical use of a default VPC has public and private subnets balanced across multiple Availability Zones (AZs). However, HPC clusters (like ParallelCluster) usually prefer a single-AZ so they can keep communication latency low and use Cluster Placement Groups. For the compute nodes, you can create a large private subnet with a relatively large number of IP addresses. Then, you can create a public subnet with minimal IP addresses, since it will only contain the head node.
 
 HPC EC2 instances like the [P4d family](https://aws.amazon.com/ec2/instance-types/p4/) aren’t available in every AZ. That means we need to determine which AZ in a given Region has all the compute families we need. We can do that with the [AWS CLI](https://aws.amazon.com/cli/) [describe-instance-type-offerings](https://docs.aws.amazon.com/cli/latest/reference/ec2/describe-instance-type-offerings.html) command. The easiest way to do this is to use [CloudShell](https://aws.amazon.com/cloudshell/), which provides a shell environment ready to issue AWS CLI commands in a few minutes. If you want a more permanent development environment for ParallelCluster CLI calls, you can use [Cloud9](https://aws.amazon.com/cloud9) which persists an IDE environment, including a Terminal in which you can run CLI commands. After you've provisioned the environment is provisioned, copy and paste the text into the shell.
@@ -106,6 +109,7 @@ Using the output showing which AZs have the compute instances you need, you can 
 You’ll also need to [create an EC2 SSH key pair](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/create-key-pairs.html) so that you can SSH into the head node once your cluster has been deployed, and populate the `<EC2-KEY-PAIR-NAME>` input in the configuration file.
 
 ### IAM Permissions
+
 While ParallelCluster creates its own least-privilege roles and policies by default, many Enterprises limit their AWS account users’ access to IAM actions. ParallelCluster also supports using or adding pre-created IAM resources, which you can request to be pre-created for you by your IT services team. The required permissions and roles are [provided in the ParallelCluster documentation](https://docs.aws.amazon.com/parallelcluster/latest/ug/iam-roles-in-parallelcluster-v3.html).
 
 Use [parallel-cluster-cryosparc.yaml](./deployment/parallel-cluster-cryosparc.yaml) - if your account allows ParallelCluster to create new IAM Roles and Policies.
@@ -123,18 +127,21 @@ If you want to automatically export data back to Amazon S3 after job completion,
 ## Deployment Steps
 
 1. **Clone the repository containing the ParallelCluster configuration files**
+
    ```bash
    git clone https://github.com/aws-samples/cryoem-on-aws-parallel-cluster.git
    ```
 
 2. **Navigate to the repository folder**
+
    ```bash
    cd cryoem-on-aws-parallel-cluster
    ```
 
 3. **Identify available Availability Zones for your required instance types**
-   
+
    Use AWS CloudShell or Cloud9 to run the following command (replace `<region>` with your target AWS region, e.g., `us-east-1`):
+
    ```bash
    aws ec2 describe-instance-type-offerings \
    --location-type availability-zone \
@@ -143,36 +150,42 @@ If you want to automatically export data back to Amazon S3 after job completion,
    --query "InstanceTypeOfferings[*].Location" \
    --output text
    ```
+
    This command identifies which Availability Zones support P4d instances. Note the output for use in the next step.
 
 4. **Create VPC and subnets in the identified Availability Zone**
-   
+
    Create a VPC with:
    - One small public subnet (for the head node)
    - One large private subnet (for compute nodes with a relatively large number of IP addresses)
-   
+
    Ensure your public subnet is configured to automatically assign IPv4 addresses and has DNS enabled.
-   
+
    Capture the subnet IDs using:
+
    ```bash
    aws ec2 describe-subnets --filters "Name=vpc-id,Values=<your-vpc-id>" --query "Subnets[*].[SubnetId,CidrBlock,AvailabilityZone]" --output table
    ```
 
 5. **Create an EC2 SSH key pair**
+
    ```bash
    aws ec2 create-key-pair --key-name cryosparc-cluster-key --query 'KeyMaterial' --output text > cryosparc-cluster-key.pem
    chmod 400 cryosparc-cluster-key.pem
    ```
+
    This creates a key pair and saves the private key locally. The key name will be used in the configuration file.
 
 6. **Create an S3 bucket for ParallelCluster artifacts**
+
    ```bash
    aws s3 mb s3://cryosparc-parallel-cluster-<your-account-id> --region <region>
    ```
+
    Replace `<your-account-id>` with your AWS account ID and `<region>` with your target region.
 
 7. **Edit the ParallelCluster configuration file**
-   
+
    Open either `parallel-cluster-cryosparc.yaml` or `parallel-cluster-cryosparc-custom-roles.yaml` and replace the following placeholders:
    - `<CRYOSPARC-LICENSE>` - Your CryoSPARC license ID from Structura
    - `<REGION>` - Your AWS region (e.g., `us-east-1`)
@@ -180,7 +193,10 @@ If you want to automatically export data back to Amazon S3 after job completion,
    - `<LARGE-PRIVATE-SUBNET-ID>` - The subnet ID for your private subnet
    - `<EC2-KEY-PAIR-NAME>` - The name of your SSH key pair (e.g., `cryosparc-cluster-key`)
 
+   Make sure to view the multi-tier deployment of instances for node groups.
+
 8. **Upload the configuration file and post-install script to S3**
+
    ```bash
    aws s3 cp parallel-cluster-cryosparc.yaml s3://cryosparc-parallel-cluster-<your-account-id>/
    aws s3 cp parallel-cluster-post-install.sh s3://cryosparc-parallel-cluster-<your-account-id>/
@@ -193,8 +209,8 @@ If you want to automatically export data back to Amazon S3 after job completion,
    pip install --upgrade pip
    pip install aws-parallelcluster
    ```
-   
 10. **Install Node Version Manager and LTS Node.JS Version**
+
     ```bash
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
     chmod ug+x ~/.nvm/nvm.sh
@@ -204,49 +220,60 @@ If you want to automatically export data back to Amazon S3 after job completion,
     ```
 
 11. **Verify ParallelCluster installation**
+
     ```bash
     pcluster version
     ```
+
     This confirms ParallelCluster CLI is properly installed.
 
 12. **Copy the ParallelCluster configuration file from S3**
+
     ```bash
     aws s3api get-object --bucket cryosparc-parallel-cluster-<your-account-id> --key parallel-cluster-cryosparc.yaml parallel-cluster-cryosparc.yaml
     ```
 
 13. **Create the ParallelCluster**
+
     ```bash
     pcluster create-cluster --cluster-name cryosparc-cluster --cluster-configuration parallel-cluster-cryosparc.yaml
     ```
+
     This command initiates the cluster creation process using AWS CloudFormation.
 
 14. **Monitor cluster creation status**
+
     ```bash
     pcluster describe-cluster --cluster-name cryosparc-cluster
     ```
+
     Alternatively, monitor progress in the [AWS CloudFormation console](https://console.aws.amazon.com/cloudformation/).
-    
+
     The cluster is ready when the status shows `CREATE_COMPLETE`.
 
 15. **Capture the head node instance ID (once cluster is created)**
+
     ```bash
     aws cloudformation describe-stack-resources --stack-name cryosparc-cluster --query "StackResources[?LogicalResourceId=='HeadNode'].PhysicalResourceId" --output text
     ```
 
 16. **Capture the head node public IP address**
+
     ```bash
     pcluster describe-cluster --cluster-name cryosparc-cluster --query "headNode.publicIpAddress" --output text
     ```
 
 17. **Install CryoSparc on Head Node**
-    
-    View [parallel-cluster-post-install.sh](source/parallel-cluster-post-install.sh) before execution. 
+
+    View [parallel-cluster-post-install.sh](source/parallel-cluster-post-install.sh) before execution.
+
     ```bash
     chmod +x source/parallel-cluster-post-install.sh
     ./source/parallel-cluster-post-install.sh
     ```
 
 **Troubleshooting:** If the stack rolls back due to a failure:
+
 - Verify your public subnet automatically assigns IPv4 addresses and has DNS enabled
 - Re-create the cluster with the `--rollback-on-failure false` flag to preserve resources for troubleshooting:
   ```bash
@@ -255,6 +282,7 @@ If you want to automatically export data back to Amazon S3 after job completion,
 - Check the HeadNode system logs in the EC2 console: Select the instance → Actions → Monitor and troubleshoot → Get system log
 
 ## Running the Guidance
+
 Once your cluster has been deployed and provisioned, you are ready to continue using AWS ParallelCluster to run CryoSPARC jobs as described in their [documentation](https://guide.cryosparc.com/setup-configuration-and-management/cryosparc-on-aws).
 
 ## Cleanup
