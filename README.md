@@ -28,7 +28,7 @@ Ideal for on-demand scaling.
 
 Lower operational burden, more “serverless” style.
 
-For detailed guidance on running Cryo-EM workloads using CryoSPARC with AWS ParallelCluster, refer to the Guidance [README](PCSREADME.md).
+For detailed guidance on running Cryo-EM workloads using CryoSPARC with AWS Parallel Computing Service (PCS), refer to the Guidance [README](PCSREADME.md).
 
 Below is the architecture for the AWS PCS Guidance.
 
