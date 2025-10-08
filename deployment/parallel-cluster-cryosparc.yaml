@@ -1,3 +1,6 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >
+  This Cloudformation template builds the architecture for Cryoem on AWS - parallel cluster version of the architecture with the necessary slurm controllers and instance groups. (AWS SID: SO9634)
 DevSettings:
   Timeouts:
     HeadNodeBootstrapTimeout: 5400
