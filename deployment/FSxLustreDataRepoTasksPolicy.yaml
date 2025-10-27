@@ -1,8 +1,10 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >
+  This Cloudformation template builds the necessary IAM policies for creating data repository tasks for FSx. (AWS SID: SO9634)
 Resources:
   DataRepoTaskIamPolicy:
     Type: "AWS::IAM::ManagedPolicy"
     Properties:
-      ManagedPolicyName: !Sub ${ProjectName}-FSxLustreDataRepoTasksPolicy
       PolicyDocument:
         Version: "2012-10-17"
         Statement:
@@ -19,4 +21,4 @@ Resources:
             Action:
               - "fsx:DescribeDataRepositoryTasks"
             Resource:
-              - "*"
+              - "arn:aws:fsx:${AWS::Region}:${AWS::AccountId}:*"

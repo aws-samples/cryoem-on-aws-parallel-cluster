@@ -1,3 +1,6 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >
+  This Cloudformation template builds the architecture for Cryoem on AWS - parallel cluster version of the architecture with the necessary slurm controllers and instance groups. (AWS SID: SO9634)
 DevSettings:
   Timeouts:
     HeadNodeBootstrapTimeout: 5400
@@ -8,7 +11,7 @@ HeadNode:
   InstanceType: c5a.4xlarge
   Networking:
     SubnetId: <SMALL-PUBLIC-SUBNET-ID>
-    ElasticIp: true 
+    ElasticIp: true
     SecurityGroups:
       - <HEAD-NODE-SECURITY-GROUP-ID>
   Ssh:
@@ -34,98 +37,59 @@ HeadNode:
   Iam:
     S3Access:
       - BucketName: <S3-BUCKET-NAME>
+
 Scheduling:
   Scheduler: slurm
   SlurmQueues:
-    - Name: gpu-t4
-      CapacityType: ONDEMAND
-      ComputeResources:
-        - Name: g4dn-12xlarge
-          InstanceType: g4dn.12xlarge
-          MinCount: 0
-          MaxCount: 20
-          DisableSimultaneousMultithreading: true
-          Efa:
-            Enabled: false
-        - Name: g4dn-metal
-          InstanceType: g4dn.metal
-          MinCount: 0
-          MaxCount: 20
-          DisableSimultaneousMultithreading: true
-          Efa:
-            Enabled: false
-        - Name: g4dn-16xlarge
-          InstanceType: g4dn.16xlarge
-          MinCount: 0
-          MaxCount: 20
-          DisableSimultaneousMultithreading: true
-          Efa:
-            Enabled: false
-      Networking:
-        SubnetIds:
-          - <LARGE-PRIVATE-SUBNET-ID>
-        SecurityGroups:
-          - <NODE-SECURITY-GROUP-ID>
-        PlacementGroup:
-          Enabled: true
-      ComputeSettings:
-        LocalStorage:
-          EphemeralVolume:
-            MountDir: /scratch
-    - Name: gpu-l4
-      CapacityType: ONDEMAND
-      ComputeResources:
-        - Name: g6e-12xlarge
-          InstanceType: g6e.12xlarge
-          MinCount: 0
-          MaxCount: 20
-          DisableSimultaneousMultithreading: true
-          Efa:
-            Enabled: false
-        - Name: g6e-16xlarge
-          InstanceType: g6e.16xlarge
-          MinCount: 0
-          MaxCount: 20
-          DisableSimultaneousMultithreading: true
-          Efa:
-            Enabled: false
-      Networking:
-        SubnetIds:
-          - <LARGE-PRIVATE-SUBNET-ID>
-        SecurityGroups:
-          - <NODE-SECURITY-GROUP-ID>
-        PlacementGroup:
-          Enabled: true
-      ComputeSettings:
-        LocalStorage:
-          EphemeralVolume:
-            MountDir: /scratch
-    - Name: gpu-a100
-      CapacityType: ONDEMAND
-      ComputeResources:
-        - Name: p4d-24xlarge
-          InstanceType: p4d.24xlarge
-          MinCount: 0
-          MaxCount: 20
-          DisableSimultaneousMultithreading: true
-          Efa:
-            Enabled: false
-      Networking:
-        SubnetIds:
-          - <LARGE-PRIVATE-SUBNET-ID>
-        SecurityGroups:
-          - <NODE-SECURITY-GROUP-ID>
-        PlacementGroup:
-          Enabled: true
-      ComputeSettings:
-        LocalStorage:
-          EphemeralVolume:
-            MountDir: /scratch
     - Name: cpu
       CapacityType: ONDEMAND
       ComputeResources:
-        - Name: c5n-18xlarge
-          InstanceType: c5n.18xlarge
+        - Name: c5a-8xlarge
+          InstanceType: c5a.8xlarge
+          MinCount: 0
+          MaxCount: 20
+          DisableSimultaneousMultithreading: true
+          Efa:
+            Enabled: false
+      Networking:
+        SubnetIds:
+          - <LARGE-PRIVATE-SUBNET-ID>
+        SecurityGroups:
+          - <NODE-SECURITY-GROUP-ID>
+        PlacementGroup:
+          Enabled: true
+      ComputeSettings:
+        LocalStorage:
+          EphemeralVolume:
+            MountDir: /scratch
+
+    - Name: single-gpu
+      CapacityType: ONDEMAND
+      ComputeResources:
+        - Name: g6-4xlarge
+          InstanceType: g6.4xlarge
+          MinCount: 0
+          MaxCount: 20
+          DisableSimultaneousMultithreading: true
+          Efa:
+            Enabled: false
+      Networking:
+        SubnetIds:
+          - <LARGE-PRIVATE-SUBNET-ID>
+        SecurityGroups:
+          - <NODE-SECURITY-GROUP-ID>
+        PlacementGroup:
+          Enabled: true
+      ComputeSettings:
+        LocalStorage:
+          EphemeralVolume:
+            MountDir: /scratch
+
+    - Name: multi-gpu
+      CapacityType: ONDEMAND
+      ComputeResources:
+        - Name: g6-48xlarge
+          InstanceType: g6.48xlarge
           MinCount: 0
           MaxCount: 20
           DisableSimultaneousMultithreading: true
@@ -142,44 +106,27 @@ Scheduling:
         LocalStorage:
           EphemeralVolume:
             MountDir: /scratch
-    - Name: gpu-a100-spot
-      CapacityType: SPOT
-      ComputeResources:
-        - Name: p4d-24xlarge-spot
-          InstanceType: p4d.24xlarge
-          MinCount: 0
-          MaxCount: 20
-          DisableSimultaneousMultithreading: true
-          Efa:
-            Enabled: false
-      Networking:
-        SubnetIds:
-          - <LARGE-PRIVATE-SUBNET-ID>
-        SecurityGroups:
-          - <NODE-SECURITY-GROUP-ID>
-        PlacementGroup:
-          Enabled: true
-      ComputeSettings:
-        LocalStorage:
-          EphemeralVolume:
-            MountDir: /scratch
+
 SharedStorage:
   - Name: cryosparc-ebs
     StorageType: Ebs
     MountDir: /shared
     EbsSettings:
-      Encrypted: false
+      Encrypted: true
       VolumeType: gp3
       Size: 100
+
   - Name: cryosparc-fsx
     StorageType: FsxLustre
     MountDir: /fsx
     FsxLustreSettings:
       AutoImportPolicy: NEW_CHANGED
-      StorageCapacity: 12000
-      DeploymentType: SCRATCH_2
+      StorageCapacity: 1024
+      DeploymentType: PERSISTENT_2
       ImportedFileChunkSize: 1024
+      PerUnitStorageThroughput: 250
       ImportPath: s3://<PATH-TO-IMPORT-FILES>
+
 Monitoring:
   Dashboards:
     CloudWatch:
