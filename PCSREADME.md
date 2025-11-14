@@ -192,7 +192,6 @@ Alternatively, you can use the [AWS S3 CLI](https://docs.aws.amazon.com/cli/late
    ```
 
    You should see partitions for CPU, GPU, and multi-GPU nodes.
-
 3. **Download and Run CryoSPARC Installation Script**
 
    ```bash
